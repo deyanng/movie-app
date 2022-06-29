@@ -1,14 +1,10 @@
-import { createStore } from 'vuex'
+import { createStore } from 'vuex';
 
-export default createStore({
-  state: {
-  },
-  getters: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
-  modules: {
-  }
-})
+import MoviesModule from './modules/movies/index.js';
+import SeriesModule from './modules/series/index.js';
+
+const store = createStore({
+  modules: { movies: MoviesModule, series: SeriesModule },
+});
+
+export default store;
