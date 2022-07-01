@@ -7,16 +7,21 @@
         :key="movie.id"
         :id="movie.id"
       >
-        <div class="image">
-          <router-link :to="'/movie/' + movie.id" :id="movie.id"
-            ><img :src="imgUrl + movie.backdrop_path" alt="Movie image"
-          /></router-link>
-        </div>
-        <div class="info">
-          <h2>{{ movie.title }}</h2>
-          <h4>Rating: {{ movie.vote_average }}/10</h4>
-          <h5>Release date: {{ movie.release_date }}</h5>
-        </div>
+        <router-link
+          :to="{
+            name: 'MovieDetails',
+            params: { id: movie.id, kind: movie.kind },
+          }"
+        >
+          <div class="image">
+            <img :src="imgUrl + movie.backdrop_path" alt="Movie image" />
+          </div>
+          <div class="info">
+            <h2>{{ movie.title }}</h2>
+            <h4>Rating: {{ movie.vote_average }}/10</h4>
+            <h5>Release date: {{ movie.release_date }}</h5>
+          </div>
+        </router-link>
       </div>
     </transition-group>
   </div>
@@ -52,7 +57,7 @@ export default {
     setInterval(() => {
       const first = this.array.shift();
       this.array = this.array.concat(first);
-    }, 5000);
+    }, 4000);
   },
 };
 </script>

@@ -17,8 +17,8 @@ export default {
       );
 
       const responseData = await response.json();
-      console.log(responseData.results);
-      this.series = responseData.results;
+      responseData.results.every((item) => Object.assign(item, { kind: 'tv' }));
+      // console.log(responseData.results, 'action series');
       if (!response.ok) {
         const error = new Error(
           responseData.message || 'An error occured during the fetch request!'

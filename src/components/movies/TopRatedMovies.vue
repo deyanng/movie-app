@@ -12,9 +12,16 @@
 
     <transition-group class="carousel" tag="div">
       <div class="carousel-item" v-for="movie in array" :key="movie.id">
-        <div class="image">
-          <img :src="imgUrl + movie.poster_path" alt="Movie poster" />
-        </div>
+        <router-link
+          :to="{
+            name: 'MovieDetails',
+            params: { id: movie.id, kind: movie.kind },
+          }"
+        >
+          <div class="image">
+            <img :src="imgUrl + movie.poster_path" alt="Movie poster" />
+          </div>
+        </router-link>
       </div>
     </transition-group>
   </div>
