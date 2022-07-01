@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 import HomePage from '../views/HomePage.vue';
-import MovieDetails from '../components/movies/MovieDetails.vue';
+import ObjectDetails from '../views/ObjectDetails.vue';
 import NotFound from '../views/NotFound.vue';
 import AllMovies from '../components/movies/AllMovies.vue';
 
@@ -17,15 +17,16 @@ const routes = [
     component: AllMovies,
   },
   {
-    path: '/movie/:id',
-    name: 'movieDetails',
-    component: MovieDetails,
+    path: '/movie/id=:id&kind=:kind',
+    name: 'MovieDetails',
+    component: ObjectDetails,
     props: true,
   },
   {
-    path: '/tv/:id',
-    name: 'seriesDetails',
-    component: HomePage,
+    path: '/tv/id=:id&kind=:kind',
+    name: 'TvDetails',
+    component: ObjectDetails,
+    props: true,
   },
   {
     path: '/:NotFound(.*)',

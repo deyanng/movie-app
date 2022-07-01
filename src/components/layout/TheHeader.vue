@@ -6,12 +6,16 @@
       /></router-link>
 
       <div class="flex-grow-1 d-flex">
-        <form class="form-inline flex-nowrap mx-0 mx-lg-auto rounded p-1">
+        <form
+          @submit.prevent="searching"
+          class="form-inline flex-nowrap mx-0 mx-lg-auto rounded p-1"
+        >
           <input
             class="form-control mr-sm-2"
             type="search"
             placeholder="Search..."
             aria-label="Search"
+            v-model="searchWord"
           />
           <i id="search" class="fa-solid fa-magnifying-glass"></i>
         </form>
@@ -69,6 +73,26 @@
     </nav>
   </header>
 </template>
+<script>
+export default {
+  data() {
+    return {
+      searchWord: "",
+    };
+  },
+  methods: {
+    searching() {
+      const arr = [{ name: "asd" }, { name: "asssd" }, { name: "asdsad" }];
+
+      arr.find((movie) => {
+        if (movie.name === this.searchWord) {
+          console.log(movie);
+        }
+      });
+    },
+  },
+};
+</script>
 
 <style scoped>
 nav {
