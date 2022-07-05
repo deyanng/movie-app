@@ -53,12 +53,12 @@ export default {
       );
 
       const responseData = await response.json();
-      console.log(responseData.cast.slice(0, 6));
-      if (payload.kind === 'movie') {
-        Object.assign(responseData, { kind: 'movie' });
-      } else if (payload.kind === 'tv') {
-        Object.assign(responseData, { kind: 'tv' });
-      }
+      // console.log(responseData.cast.slice(0, 6));
+      // if (payload.kind === 'movie') {
+      //   Object.assign(responseData, { kind: 'movie' });
+      // } else if (payload.kind === 'tv') {
+      //   Object.assign(responseData, { kind: 'tv' });
+      // }
       // console.log(responseData, 'resdata details in actions');
       if (!response.ok) {
         const error = new Error(
@@ -70,15 +70,15 @@ export default {
     },
     async loadObjectReviews(context, payload) {
       const response = await fetch(
-        `https://api.themoviedb.org/3/${payload.kind}/${payload.id}?api_key=7074bb722049de6c4c14dd7d06db2407`
+        `https://api.themoviedb.org/3/${payload.kind}/${payload.id}/reviews?api_key=7074bb722049de6c4c14dd7d06db2407`
       );
 
       const responseData = await response.json();
-      if (payload.kind === 'movie') {
-        Object.assign(responseData, { kind: 'movie' });
-      } else if (payload.kind === 'tv') {
-        Object.assign(responseData, { kind: 'tv' });
-      }
+      // if (payload.kind === 'movie') {
+      //   Object.assign(responseData.results, { kind: 'movie' });
+      // } else if (payload.kind === 'tv') {
+      //   Object.assign(responseData.results, { kind: 'tv' });
+      // }
       // console.log(responseData, 'resdata details in actions');
       if (!response.ok) {
         const error = new Error(
@@ -86,19 +86,19 @@ export default {
         );
         throw error;
       }
-      context.commit('loadObjectDetails', responseData);
+      context.commit('loadObjectReviews', responseData.results);
     },
     async loadObjectVideos(context, payload) {
       const response = await fetch(
-        `https://api.themoviedb.org/3/${payload.kind}/${payload.id}?api_key=7074bb722049de6c4c14dd7d06db2407`
+        `https://api.themoviedb.org/3/${payload.kind}/${payload.id}/videos?api_key=7074bb722049de6c4c14dd7d06db2407`
       );
 
       const responseData = await response.json();
-      if (payload.kind === 'movie') {
-        Object.assign(responseData, { kind: 'movie' });
-      } else if (payload.kind === 'tv') {
-        Object.assign(responseData, { kind: 'tv' });
-      }
+      // if (payload.kind === 'movie') {
+      //   Object.assign(responseData, { kind: 'movie' });
+      // } else if (payload.kind === 'tv') {
+      //   Object.assign(responseData, { kind: 'tv' });
+      // }
       // console.log(responseData, 'resdata details in actions');
       if (!response.ok) {
         const error = new Error(
@@ -106,19 +106,19 @@ export default {
         );
         throw error;
       }
-      context.commit('loadObjectDetails', responseData);
+      context.commit('loadObjectVideos', responseData.results);
     },
     async loadObjectSimilars(context, payload) {
       const response = await fetch(
-        `https://api.themoviedb.org/3/${payload.kind}/${payload.id}?api_key=7074bb722049de6c4c14dd7d06db2407`
+        `https://api.themoviedb.org/3/${payload.kind}/${payload.id}/similar?api_key=7074bb722049de6c4c14dd7d06db2407`
       );
 
       const responseData = await response.json();
-      if (payload.kind === 'movie') {
-        Object.assign(responseData, { kind: 'movie' });
-      } else if (payload.kind === 'tv') {
-        Object.assign(responseData, { kind: 'tv' });
-      }
+      // if (payload.kind === 'movie') {
+      //   Object.assign(responseData, { kind: 'movie' });
+      // } else if (payload.kind === 'tv') {
+      //   Object.assign(responseData, { kind: 'tv' });
+      // }
       // console.log(responseData, 'resdata details in actions');
       if (!response.ok) {
         const error = new Error(
@@ -126,7 +126,7 @@ export default {
         );
         throw error;
       }
-      context.commit('loadObjectDetails', responseData);
+      context.commit('loadObjectSimilars', responseData.results);
     },
   },
   getters: {

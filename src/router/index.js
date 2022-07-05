@@ -3,18 +3,12 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from '../views/HomePage.vue';
 import ObjectDetails from '../views/ObjectDetails.vue';
 import NotFound from '../views/NotFound.vue';
-import AllMovies from '../components/movies/AllMovies.vue';
 
 const routes = [
   {
     path: '/',
     name: 'home',
     component: HomePage,
-  },
-  {
-    path: '/movies',
-    name: 'movies',
-    component: AllMovies,
   },
   {
     path: '/movie/id=:id&kind=:kind',
