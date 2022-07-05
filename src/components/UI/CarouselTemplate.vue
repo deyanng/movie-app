@@ -15,22 +15,8 @@
     <div class="carousel-item" v-for="object in data" :key="object.id">
       <!-- router-link -->
       <router-link
-        v-if="object.kind === 'movie'"
         :to="{
-          name: 'MovieDetails',
-          params: { id: object.id, kind: object.kind },
-        }"
-      >
-        <div class="image">
-          <img :src="imgUrl + object.poster_path" alt="Media poster" />
-          <!-- /router-link -->
-        </div>
-      </router-link>
-
-      <router-link
-        v-if="object.kind === 'tv'"
-        :to="{
-          name: 'TvDetails',
+          name: object.kind === 'movie' ? 'MovieDetails' : 'TvDetails',
           params: { id: object.id, kind: object.kind },
         }"
       >
@@ -62,7 +48,7 @@ export default {
       try {
         await this.$store.dispatch(this.action);
         this.data = this.getData;
-        console.log(this.getData);
+        // console.log(this.getData);
       } catch (error) {
         this.error =
           error.message || "There is a problem with the fetch request!";

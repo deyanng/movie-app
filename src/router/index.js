@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import HomePage from '../views/HomePage.vue';
 import ObjectDetails from '../views/ObjectDetails.vue';
+import SearchResults from '../views/SearchResults.vue';
 import NotFound from '../views/NotFound.vue';
 
 const routes = [
@@ -9,6 +10,12 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomePage,
+  },
+  {
+    path: '/search?query=:query',
+    name: 'Search',
+    component: SearchResults,
+    props: true,
   },
   {
     path: '/movie/id=:id&kind=:kind',

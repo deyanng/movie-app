@@ -17,7 +17,11 @@
             aria-label="Search"
             v-model="searchWord"
           />
-          <i id="search" class="fa-solid fa-magnifying-glass"></i>
+          <i
+            id="search"
+            class="fa-solid fa-magnifying-glass"
+            :hidden="showSearchIcon"
+          ></i>
         </form>
       </div>
       <button
@@ -82,13 +86,12 @@ export default {
   },
   methods: {
     searching() {
-      const arr = [{ name: "asd" }, { name: "asssd" }, { name: "asdsad" }];
-
-      arr.find((movie) => {
-        if (movie.name === this.searchWord) {
-          console.log(movie);
-        }
-      });
+      this.$router.push({ name: "Search", params: { query: this.searchWord } });
+    },
+  },
+  computed: {
+    showSearchIcon() {
+      return this.searchWord.length;
     },
   },
 };

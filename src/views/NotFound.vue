@@ -11,7 +11,7 @@ export default {
     redirect() {
       setTimeout(() => {
         this.$router.push("/");
-      }, 3000);
+      }, 5000);
     },
   },
   mounted() {
@@ -19,3 +19,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+h2,
+h4 {
+  color: #ffffff;
+  margin: 300px auto;
+}
+</style>

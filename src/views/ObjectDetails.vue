@@ -1,9 +1,17 @@
 <template>
-  <div v-if="isReady" class="row details-row">
+  <div v-if="objectDetails" class="row details-row">
     <div class="col">
       <img
         class="poster"
-        :src="imgUrl + objectDetails.poster_path"
+        :src="
+          objectDetails.poster_path
+            ? imgUrl + objectDetails.poster_path
+            : objectDetails.backdrop_path
+            ? imgUrl + objectDetails.backdrop_path
+            : objectDetails.profile_path
+            ? imgUrl + objectDetails.profile_path
+            : noImage
+        "
         alt="Poster image"
       />
     </div>
@@ -13,6 +21,10 @@
           objectDetails.original_title
             ? objectDetails.original_title
             : objectDetails.original_name
+            ? objectDetails.original_name
+            : objectDetails.name
+            ? objectDetails.name
+            : "No name"
         }}
         <a :href="objectDetails.homepage" target="_blank" title="Visit homepage"
           ><i class="fa-solid fa-display"></i
@@ -21,7 +33,13 @@
       <h3 v-for="genre in objectDetails.genres" :key="genre.id">
         | {{ genre.name }} |
       </h3>
-      <h5>{{ objectDetails.overview }}</h5>
+      <h5>
+        {{
+          objectDetails.overview
+            ? objectDetails.overview
+            : objectDetails.known_for_department
+        }}
+      </h5>
     </div>
   </div>
   <div class="more-details">
@@ -48,10 +66,10 @@
       </div>
       <hr class="solid" />
     </div>
-    <h2 id="credits" v-else>There is no credits for this movie!</h2>
+    <h2 id="credits" v-else>There is no credits available!</h2>
     <div
       v-if="objectReviews && objectReviews.length > 0"
-      class="row"
+      class="row reviews-row"
       id="reviews"
     >
       <h2>Reviews</h2>
@@ -78,7 +96,7 @@
         <p>{{ review.content.substr(0, 300) }}...</p>
       </div>
     </div>
-    <h2 id="reviews" v-else>There is no reviews for this movie!</h2>
+    <h2 id="reviews" v-else>There is no reviews available!</h2>
     <hr class="solid" />
 
     <div v-if="objectVideos && objectVideos.length > 0" class="row" id="videos">
@@ -258,14 +276,19 @@ h3 {
 }
 .credits-col img {
   width: 90%;
+  max-width: 300px;
   border-radius: 10px;
   margin-bottom: 10px;
 }
 .credits-col p {
   font-style: italic;
 }
+.row {
+  justify-content: space-around;
+}
 .reviews-col {
   width: 40%;
+  max-width: 400px;
   margin: 0 20px;
   padding: 10px;
   background-color: #1f2b3f;
@@ -277,6 +300,7 @@ h3 {
 }
 .video-col {
   width: 33%;
+  max-width: 600px;
   margin: 0 20px;
   padding: 10px;
   background-color: #1f2b3f;
