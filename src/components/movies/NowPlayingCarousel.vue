@@ -33,6 +33,7 @@ export default {
     return {
       imgUrl: "https://image.tmdb.org/t/p/w500",
       array: [],
+      intrevalId: null,
     };
   },
   computed: {
@@ -54,10 +55,13 @@ export default {
     this.loadNowPlaying();
   },
   mounted() {
-    setInterval(() => {
+    this.intervalId = setInterval(() => {
       const first = this.array.shift();
       this.array = this.array.concat(first);
     }, 4000);
+  },
+  beforeUnmount() {
+    clearInterval(this.intervalId);
   },
 };
 </script>

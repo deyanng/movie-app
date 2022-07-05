@@ -7,6 +7,9 @@ export default {
     };
   },
   mutations: {
+    SET_MOVIES(state, payload) {
+      state[payload.key] = payload.data;
+    },
     loadNowPlaying(state, payload) {
       state.nowPlaying = payload;
     },
@@ -21,18 +24,20 @@ export default {
       );
 
       const responseData = await response.json();
-
       responseData.results.every((item) =>
         Object.assign(item, { kind: 'movie' })
       );
-      // console.log(responseData.results, 'action load nowplaying');
+      console.log(responseData.results, 'action load nowplaying');
       if (!response.ok) {
         const error = new Error(
           responseData.message || 'An error occured during the fetch request!'
         );
         throw error;
       }
-      context.commit('loadNowPlaying', responseData.results);
+      context.commit('SET_MOVIES', {
+        key: 'nowPlaying',
+        data: responseData.results,
+      });
     },
     async loadTopRated(context) {
       const response = await fetch(
@@ -50,7 +55,10 @@ export default {
         );
         throw error;
       }
-      context.commit('loadTopRated', responseData.results);
+      context.commit('SET_MOVIES', {
+        key: 'topRated',
+        data: responseData.results,
+      });
     },
   },
   getters: {
