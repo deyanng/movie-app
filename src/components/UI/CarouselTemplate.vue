@@ -31,7 +31,7 @@
 
 <script>
 export default {
-  props: ["title", "getter", "action"],
+  props: ["title", "category"],
   data() {
     return {
       imgUrl: "https://image.tmdb.org/t/p/w500",
@@ -39,16 +39,33 @@ export default {
     };
   },
   computed: {
+    setGetter() {
+      if (this.category === "movie") {
+        return "movies/topRated";
+      } else if (this.category === "tv") {
+        return "series/series";
+      } else {
+        return "";
+      }
+    },
+    setAction() {
+      if (this.category === "movie") {
+        return "movies/loadTopRated";
+      } else if (this.category === "tv") {
+        return "series/loadSeries";
+      } else {
+        return "";
+      }
+    },
     getData() {
-      return this.$store.getters[this.getter];
+      return this.$store.getters[this.setGetter];
     },
   },
   methods: {
     async loadData() {
       try {
-        await this.$store.dispatch(this.action);
+        await this.$store.dispatch(this.setAction);
         this.data = this.getData;
-        // console.log(this.getData);
       } catch (error) {
         this.error =
           error.message || "There is a problem with the fetch request!";

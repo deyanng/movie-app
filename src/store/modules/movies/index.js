@@ -10,12 +10,6 @@ export default {
     SET_MOVIES(state, payload) {
       state[payload.key] = payload.data;
     },
-    loadNowPlaying(state, payload) {
-      state.nowPlaying = payload;
-    },
-    loadTopRated(state, payload) {
-      state.topRated = payload;
-    },
   },
   actions: {
     async loadNowPlaying(context) {
@@ -27,7 +21,6 @@ export default {
       responseData.results.every((item) =>
         Object.assign(item, { kind: 'movie' })
       );
-      console.log(responseData.results, 'action load nowplaying');
       if (!response.ok) {
         const error = new Error(
           responseData.message || 'An error occured during the fetch request!'

@@ -1,15 +1,7 @@
 <template>
   <NowPlaying />
-  <CarouselTemplate
-    title="Top Rated"
-    getter="movies/topRated"
-    action="movies/loadTopRated"
-  />
-  <CarouselTemplate
-    title="Top Series"
-    getter="series/series"
-    action="series/loadSeries"
-  />
+  <CarouselTemplate title="Top Rated" category="movie" />
+  <CarouselTemplate title="Top Series" category="tv" />
 </template>
 
 <script>
