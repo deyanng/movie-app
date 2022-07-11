@@ -50,7 +50,11 @@
       <a href="#similars" class="nav-link">Similar</a>
     </nav>
     <hr class="solid" />
-    <div v-if="objectCredits" class="row" id="credits">
+    <div
+      v-if="objectCredits && objectCredits.length > 0"
+      class="row"
+      id="credits"
+    >
       <h2>Credits</h2>
       <div
         class="col credits-col"
@@ -64,9 +68,9 @@
         <h4>{{ credit.name }}</h4>
         <p>{{ credit.character }}</p>
       </div>
-      <hr class="solid" />
     </div>
-    <h2 id="credits" v-else>There is no credits available!</h2>
+    <h2 v-else>There is no credits available!</h2>
+    <hr class="solid" />
     <div
       v-if="objectReviews && objectReviews.length > 0"
       class="row reviews-row"
@@ -86,6 +90,7 @@
           "
           alt="Author review avatar"
         />
+        <!-- disableClick expect boolean, but works with string -->
         <vue3-star-ratings
           :numberOfStars="10"
           :showControl="false"
@@ -96,7 +101,7 @@
         <p>{{ review.content.substr(0, 300) }}...</p>
       </div>
     </div>
-    <h2 id="reviews" v-else>There is no reviews available!</h2>
+    <h2 v-else>There is no reviews available!</h2>
     <hr class="solid" />
 
     <div v-if="objectVideos && objectVideos.length > 0" class="row" id="videos">
@@ -107,12 +112,10 @@
         :key="video.id"
       >
         <iframe :src="videoUrl + video.key" allowfullscreen></iframe>
-        <!-- <video :src="videoUrl + video.key" controls>
-          Your browser does not support the video tag.
-        </video> -->
+        <!-- CORS policy error with video tag -->
       </div>
     </div>
-    <h2 id="videos" v-else>There is no videos available!</h2>
+    <h2 v-else>There is no videos available!</h2>
     <hr class="solid" />
     <div
       class="row"
@@ -128,7 +131,7 @@
         <img :src="imgUrl + similar.poster_path" alt="Similar movie poster" />
       </div>
     </div>
-    <h2 id="similars" v-else>There is no similar media available!</h2>
+    <h2 v-else>There is no similar media available!</h2>
     <hr class="solid" />
   </div>
 </template>
@@ -175,7 +178,6 @@ export default {
       });
       this.objectDetails = this.details;
       this.isReady = true;
-      // console.log(this.objectDetails.genres);
     },
     async loadObjectCredits() {
       await this.$store.dispatch("details/loadObjectCredits", {
@@ -183,9 +185,7 @@ export default {
         kind: this.kind,
       });
       this.objectCredits = this.credits;
-      // console.log(this.credits);
       this.isReady = true;
-      // console.log(this.objectDetails.genres);
     },
     async loadObjectReviews() {
       await this.$store.dispatch("details/loadObjectReviews", {
@@ -193,7 +193,6 @@ export default {
         kind: this.kind,
       });
       this.objectReviews = this.reviews;
-      // console.log(this.reviews);
       this.isReady = true;
     },
     async loadObjectVideos() {
@@ -202,7 +201,6 @@ export default {
         kind: this.kind,
       });
       this.objectVideos = this.videos;
-      // console.log(this.videos);?
       this.isReady = true;
     },
     async loadObjectSimilars() {
@@ -230,7 +228,6 @@ export default {
 }
 .nav .nav-link {
   margin-top: 12px;
-  /* padding: 10px; */
   width: 25%;
   border-radius: 10px;
   color: #c2c1c1;

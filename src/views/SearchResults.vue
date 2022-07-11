@@ -63,7 +63,6 @@ export default {
       );
       const resData = await response.json();
       this.searchingResult = resData.results;
-      console.log(this.searchingResult);
     },
   },
   created() {
