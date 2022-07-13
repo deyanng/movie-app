@@ -11,7 +11,7 @@
     </div>
   </div>
 
-  <transition-group class="carousel" tag="div">
+  <transition-group class="carousel" tag="div" name="carousel">
     <div class="carousel-item" v-for="object in data" :key="object.id">
       <!-- router-link -->
       <router-link
@@ -31,11 +31,22 @@
 
 <script>
 export default {
-  props: ["title", "category"],
+  props: {
+    title: {
+      type: String,
+      required: true,
+    },
+    category: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       imgUrl: "https://image.tmdb.org/t/p/w500",
       data: [],
+      startPage: 1,
+      currPage: 1,
     };
   },
   computed: {
@@ -61,23 +72,33 @@ export default {
       return this.$store.getters[this.setGetter];
     },
   },
+  watch: {
+    currPage(newPage) {
+      this.loadData(newPage);
+    },
+  },
   methods: {
-    async loadData() {
+    async loadData(value = this.currPage) {
       try {
-        await this.$store.dispatch(this.setAction);
+        await this.$store.dispatch(this.setAction, { currPage: value });
         this.data = this.getData;
+        // console.log(this.data);
       } catch (error) {
         this.error =
           error.message || "There is a problem with the fetch request!";
       }
     },
     next() {
-      const first = this.data.shift();
-      this.data = this.data.concat(first);
+      if (this.currPage > 10) {
+        return;
+      }
+      this.currPage++;
     },
     previous() {
-      const last = this.data.pop();
-      this.data = [last].concat(this.data);
+      if (this.currPage <= this.startPage) {
+        return;
+      }
+      this.currPage--;
     },
   },
   mounted() {
@@ -124,7 +145,7 @@ h2 {
 .carousel {
   display: flex;
   width: 100%;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   overflow: hidden;
   min-height: 280px;
@@ -134,9 +155,6 @@ h2 {
   height: 280px;
   margin: 5px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: transform 0.5s ease-in-out;
 }
 
 .carousel-item img {
@@ -145,10 +163,26 @@ h2 {
   height: 100%;
 }
 
-.carousel-item:first-of-type {
+/* .carousel-item:first-of-type {
   opacity: 0;
 }
 .carousel-item:last-of-type {
   opacity: 0;
+} */
+
+.carousel-move,
+.carousel-enter-active,
+.carousel-leave-active {
+  transition: all 0.8s cubic-bezier(0.8, 0.2, 0.5, 1);
+}
+
+.carousel-enter-from,
+.carousel-leave-to {
+  opacity: 0;
+  transform: scaleY(0.01) translate(30px, 0);
+}
+
+.carousel-leave-active {
+  position: absolute;
 }
 </style>

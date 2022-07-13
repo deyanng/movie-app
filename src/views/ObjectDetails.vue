@@ -1,15 +1,18 @@
 <template>
-  <div v-if="objectDetails" class="row details-row">
+  <div
+    v-if="details && Object.keys(details).length > 0"
+    class="row details-row"
+  >
     <div class="col">
       <img
         class="poster"
         :src="
-          objectDetails.poster_path
-            ? imgUrl + objectDetails.poster_path
-            : objectDetails.backdrop_path
-            ? imgUrl + objectDetails.backdrop_path
-            : objectDetails.profile_path
-            ? imgUrl + objectDetails.profile_path
+          details.poster_path
+            ? imgUrl + details.poster_path
+            : details.backdrop_path
+            ? imgUrl + details.backdrop_path
+            : details.profile_path
+            ? imgUrl + details.profile_path
             : noImage
         "
         alt="Poster image"
@@ -18,27 +21,23 @@
     <div class="col info">
       <h1>
         {{
-          objectDetails.original_title
-            ? objectDetails.original_title
-            : objectDetails.original_name
-            ? objectDetails.original_name
-            : objectDetails.name
-            ? objectDetails.name
+          details.original_title
+            ? details.original_title
+            : details.original_name
+            ? details.original_name
+            : details.name
+            ? details.name
             : "No name"
         }}
-        <a :href="objectDetails.homepage" target="_blank" title="Visit homepage"
+        <a :href="details.homepage" target="_blank" title="Visit homepage"
           ><i class="fa-solid fa-display"></i
         ></a>
       </h1>
-      <h3 v-for="genre in objectDetails.genres" :key="genre.id">
+      <h3 v-for="genre in details.genres" :key="genre.id">
         | {{ genre.name }} |
       </h3>
       <h5>
-        {{
-          objectDetails.overview
-            ? objectDetails.overview
-            : objectDetails.known_for_department
-        }}
+        {{ details.overview ? details.overview : details.known_for_department }}
       </h5>
     </div>
   </div>
@@ -49,18 +48,11 @@
       <a href="#videos" class="nav-link">Videos</a>
       <a href="#similars" class="nav-link">Similar</a>
     </nav>
+    <!--cast, similar movies, videos,   -->
     <hr class="solid" />
-    <div
-      v-if="objectCredits && objectCredits.length > 0"
-      class="row"
-      id="credits"
-    >
+    <div v-if="credits && credits.length > 0" class="row" id="credits">
       <h2>Credits</h2>
-      <div
-        class="col credits-col"
-        v-for="credit in objectCredits"
-        :key="credit.id"
-      >
+      <div class="col credits-col" v-for="credit in credits" :key="credit.id">
         <img
           :src="credit.profile_path ? imgUrl + credit.profile_path : noImage"
           alt="Profile image"
@@ -72,18 +64,19 @@
     <h2 v-else>There is no credits available!</h2>
     <hr class="solid" />
     <div
-      v-if="objectReviews && objectReviews.length > 0"
+      v-if="reviews && reviews.length > 0"
       class="row reviews-row"
       id="reviews"
     >
       <h2>Reviews</h2>
       <div
         class="col reviews-col"
-        v-for="review in objectReviews.slice(0, 2)"
+        v-for="review in reviews.slice(0, 2)"
         :key="review.id"
       >
         <img
           :src="
+            review.author_details.avatar_path &&
             review.author_details.avatar_path.height > 30
               ? review.author_details.avatar_path
               : noImage
@@ -92,9 +85,9 @@
         />
         <!-- disableClick expect boolean, but works with string -->
         <vue3-star-ratings
+          class="disabled"
           :numberOfStars="10"
           :showControl="false"
-          disableClick="false"
           v-model="review.author_details.rating"
         />
         <h4>{{ review.author }}</h4>
@@ -104,11 +97,11 @@
     <h2 v-else>There is no reviews available!</h2>
     <hr class="solid" />
 
-    <div v-if="objectVideos && objectVideos.length > 0" class="row" id="videos">
+    <div v-if="videos && videos.length > 0" class="row" id="videos">
       <h2>Videos</h2>
       <div
         class="col video-col"
-        v-for="video in objectVideos.slice(0, 3)"
+        v-for="video in videos.slice(0, 3)"
         :key="video.id"
       >
         <iframe :src="videoUrl + video.key" allowfullscreen></iframe>
@@ -117,15 +110,11 @@
     </div>
     <h2 v-else>There is no videos available!</h2>
     <hr class="solid" />
-    <div
-      class="row"
-      v-if="objectSimilars && objectSimilars.length > 0"
-      id="similars"
-    >
+    <div class="row" v-if="similars && similars.length > 0" id="similars">
       <h2>Similar Media</h2>
       <div
         class="col similars-col"
-        v-for="similar in objectSimilars.slice(0, 5)"
+        v-for="similar in similars.slice(0, 5)"
         :key="similar.id"
       >
         <img :src="imgUrl + similar.poster_path" alt="Similar movie poster" />
@@ -138,15 +127,18 @@
 
 <script>
 export default {
-  props: ["id", "kind"],
+  props: {
+    id: {
+      type: String,
+      required: true,
+    },
+    kind: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
-      objectDetails: null,
-      objectCredits: null,
-      objectReviews: null,
-      objectVideos: null,
-      objectSimilars: null,
-      isReady: false,
       imgUrl: "https://image.tmdb.org/t/p/w500",
       videoUrl: "https://www.youtube.com/embed/",
       noImage:
@@ -171,53 +163,15 @@ export default {
     },
   },
   methods: {
-    async loadObjectDetails() {
-      await this.$store.dispatch("details/loadObjectDetails", {
+    fetchAllDetails() {
+      this.$store.dispatch("details/fetchAllDetails", {
         id: this.id,
         kind: this.kind,
       });
-      this.objectDetails = this.details;
-      this.isReady = true;
-    },
-    async loadObjectCredits() {
-      await this.$store.dispatch("details/loadObjectCredits", {
-        id: this.id,
-        kind: this.kind,
-      });
-      this.objectCredits = this.credits;
-      this.isReady = true;
-    },
-    async loadObjectReviews() {
-      await this.$store.dispatch("details/loadObjectReviews", {
-        id: this.id,
-        kind: this.kind,
-      });
-      this.objectReviews = this.reviews;
-      this.isReady = true;
-    },
-    async loadObjectVideos() {
-      await this.$store.dispatch("details/loadObjectVideos", {
-        id: this.id,
-        kind: this.kind,
-      });
-      this.objectVideos = this.videos;
-      this.isReady = true;
-    },
-    async loadObjectSimilars() {
-      await this.$store.dispatch("details/loadObjectSimilars", {
-        id: this.id,
-        kind: this.kind,
-      });
-      this.objectSimilars = this.similars;
-      this.isReady = true;
     },
   },
   created() {
-    this.loadObjectDetails();
-    this.loadObjectCredits();
-    this.loadObjectReviews();
-    this.loadObjectVideos();
-    this.loadObjectSimilars();
+    this.fetchAllDetails();
   },
 };
 </script>
@@ -232,6 +186,7 @@ export default {
   border-radius: 10px;
   color: #c2c1c1;
 }
+
 .nav .nav-link:hover {
   color: #c2c1c1;
   background-color: #315799;
@@ -322,5 +277,9 @@ h3 {
 hr.solid {
   margin-top: 10px;
   border-top: 4px solid #cecaca;
+}
+.disabled {
+  pointer-events: none;
+  cursor: default;
 }
 </style>

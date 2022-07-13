@@ -86,7 +86,11 @@ export default {
   },
   methods: {
     searching() {
-      this.$router.push({ name: "Search", params: { query: this.searchWord } });
+      this.$router.push({
+        name: "Search",
+        params: { query: this.searchWord },
+      });
+      this.searchWord = "";
     },
   },
   computed: {
