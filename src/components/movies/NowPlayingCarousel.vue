@@ -60,7 +60,7 @@ export default {
       this.array = this.array.concat(first);
     }, 4000);
   },
-  beforeUnmount() {
+  unmounted() {
     clearInterval(this.intervalId);
   },
 };
