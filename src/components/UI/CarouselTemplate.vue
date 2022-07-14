@@ -163,17 +163,10 @@ h2 {
   height: 100%;
 }
 
-/* .carousel-item:first-of-type {
-  opacity: 0;
-}
-.carousel-item:last-of-type {
-  opacity: 0;
-} */
-
 .carousel-move,
 .carousel-enter-active,
 .carousel-leave-active {
-  transition: all 0.8s cubic-bezier(0.8, 0.2, 0.5, 1);
+  transition: all 0.8s cubic-bezier(0.5, 0.2, 0.5, 1);
 }
 
 .carousel-enter-from,

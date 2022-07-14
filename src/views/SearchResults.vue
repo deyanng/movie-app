@@ -1,9 +1,13 @@
 <template>
   <div
-    v-if="searchingResult && searchingResult.length > 0"
+    v-if="searchingResult.results && searchingResult.results.length > 0"
     class="result-container"
   >
-    <div class="result-item" v-for="result in searchingResult" :key="result.id">
+    <div
+      class="result-item"
+      v-for="result in searchingResult.results"
+      :key="result.id"
+    >
       <router-link
         :class="{ disabled: result.media_type === 'person' }"
         :to="{
@@ -39,10 +43,10 @@
   </div>
   <h1 v-else>There is no results for '{{ query }}'.</h1>
   <PaginationTemplate
-    @clicked="
-      getCurrentPage($event);
-      scrollChange();
-    "
+    @goTo="changePage"
+    :totalPages="searchingResult.total_pages"
+    :visiblePages="3"
+    :currPage="currPage"
   />
 </template>
 
@@ -68,25 +72,24 @@ export default {
   },
   watch: {
     query(newVal) {
-      this.searching(newVal, (this.currPage = 1));
+      this.searching(newVal);
     },
   },
+
   methods: {
-    async searching(query = this.query, page = this.currPage) {
+    async searching(query = this.query, pageNum = this.currPage) {
       const response = await fetch(
-        `https://api.themoviedb.org/3/search/multi?api_key=7074bb722049de6c4c14dd7d06db2407&query=${query}&page=${page}`
+        `https://api.themoviedb.org/3/search/multi?api_key=7074bb722049de6c4c14dd7d06db2407&query=${query}&page=${pageNum}`
       );
       const resData = await response.json();
-      this.searchingResult = resData.results.slice(0, 12);
+      this.searchingResult = resData;
     },
-    getCurrentPage($event) {
-      if ($event === "prev" && this.currPage > 1) {
-        this.currPage -= 1;
-      } else if ($event === "next" && this.currPage < 6) {
-        this.currPage += 1;
-      } else {
-        this.currPage = $event;
+    changePage(pageNum) {
+      console.log(pageNum);
+      if (pageNum < 1 || pageNum > this.searchingResult.total_pages) {
+        return;
       }
+      this.currPage = pageNum;
       this.searching(this.query, this.currPage);
     },
     scrollChange() {

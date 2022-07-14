@@ -42,27 +42,124 @@
     </div>
   </div>
   <div class="more-details">
-    <nav class="nav">
+    <!-- <nav class="nav">
       <a href="#credits" class="nav-link">Credits</a>
       <a href="#reviews" class="nav-link">Reviews</a>
       <a href="#videos" class="nav-link">Videos</a>
       <a href="#similars" class="nav-link">Similar</a>
+    </nav> -->
+
+    <nav>
+      <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button
+          class="nav-link active"
+          id="nav-credits-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#nav-credits"
+          type="button"
+          role="tab"
+          aria-controls="nav-credits"
+          aria-selected="true"
+        >
+          Credits
+        </button>
+        <button
+          class="nav-link"
+          id="nav-videos-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#nav-videos"
+          type="button"
+          role="tab"
+          aria-controls="nav-videos"
+          aria-selected="false"
+        >
+          Videos
+        </button>
+        <button
+          class="nav-link"
+          id="nav-similar-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#nav-similar"
+          type="button"
+          role="tab"
+          aria-controls="nav-similar"
+          aria-selected="false"
+        >
+          Similar Movies
+        </button>
+      </div>
     </nav>
-    <!--cast, similar movies, videos,   -->
-    <hr class="solid" />
-    <div v-if="credits && credits.length > 0" class="row" id="credits">
-      <h2>Credits</h2>
-      <div class="col credits-col" v-for="credit in credits" :key="credit.id">
-        <img
-          :src="credit.profile_path ? imgUrl + credit.profile_path : noImage"
-          alt="Profile image"
-        />
-        <h4>{{ credit.name }}</h4>
-        <p>{{ credit.character }}</p>
+    <div class="tab-content" id="nav-tabContent">
+      <div
+        class="tab-pane fade show active"
+        id="nav-credits"
+        role="tabpanel"
+        aria-labelledby="nav-credits-tab"
+      >
+        <div v-if="credits && credits.length > 0" class="row" id="credits">
+          <h2>Credits</h2>
+          <div
+            class="col credits-col"
+            v-for="credit in credits"
+            :key="credit.id"
+          >
+            <img
+              :src="
+                credit.profile_path ? imgUrl + credit.profile_path : noImage
+              "
+              alt="Profile image"
+            />
+            <h4>{{ credit.name }}</h4>
+            <p>{{ credit.character }}</p>
+          </div>
+        </div>
+        <h2 v-else>There is no credits available!</h2>
+        <hr class="solid" />
+      </div>
+      <div
+        class="tab-pane fade"
+        id="nav-videos"
+        role="tabpanel"
+        aria-labelledby="nav-videos-tab"
+      >
+        <div v-if="videos && videos.length > 0" class="row" id="videos">
+          <h2>Videos</h2>
+          <div
+            class="col video-col"
+            v-for="video in videos.slice(0, 3)"
+            :key="video.id"
+          >
+            <iframe :src="videoUrl + video.key" allowfullscreen></iframe>
+            <!-- CORS policy error with video tag -->
+          </div>
+        </div>
+        <h2 v-else>There is no videos available!</h2>
+        <hr class="solid" />
+      </div>
+      <div
+        class="tab-pane fade"
+        id="nav-similar"
+        role="tabpanel"
+        aria-labelledby="nav-similar-tab"
+      >
+        <div class="row" v-if="similars && similars.length > 0" id="similars">
+          <h2>Similar Media</h2>
+          <div
+            class="col similars-col"
+            v-for="similar in similars.slice(0, 5)"
+            :key="similar.id"
+          >
+            <img
+              :src="imgUrl + similar.poster_path"
+              alt="Similar movie poster"
+            />
+          </div>
+        </div>
+        <h2 v-else>There is no similar media available!</h2>
+        <hr class="solid" />
       </div>
     </div>
-    <h2 v-else>There is no credits available!</h2>
-    <hr class="solid" />
+
     <div
       v-if="reviews && reviews.length > 0"
       class="row reviews-row"
@@ -95,32 +192,6 @@
       </div>
     </div>
     <h2 v-else>There is no reviews available!</h2>
-    <hr class="solid" />
-
-    <div v-if="videos && videos.length > 0" class="row" id="videos">
-      <h2>Videos</h2>
-      <div
-        class="col video-col"
-        v-for="video in videos.slice(0, 3)"
-        :key="video.id"
-      >
-        <iframe :src="videoUrl + video.key" allowfullscreen></iframe>
-        <!-- CORS policy error with video tag -->
-      </div>
-    </div>
-    <h2 v-else>There is no videos available!</h2>
-    <hr class="solid" />
-    <div class="row" v-if="similars && similars.length > 0" id="similars">
-      <h2>Similar Media</h2>
-      <div
-        class="col similars-col"
-        v-for="similar in similars.slice(0, 5)"
-        :key="similar.id"
-      >
-        <img :src="imgUrl + similar.poster_path" alt="Similar movie poster" />
-      </div>
-    </div>
-    <h2 v-else>There is no similar media available!</h2>
     <hr class="solid" />
   </div>
 </template>
@@ -185,12 +256,17 @@ export default {
   width: 25%;
   border-radius: 10px;
   color: #c2c1c1;
+  font-size: 16pt;
 }
 
 .nav .nav-link:hover {
   color: #c2c1c1;
   background-color: #315799;
   border-radius: 10px;
+}
+.active {
+  color: #c2c1c1 !important;
+  background-color: #2a3b57 !important;
 }
 .details-row {
   margin: 50px 80px;
@@ -218,6 +294,9 @@ h3 {
   width: 100%;
   background: #182131 0% 0% no-repeat;
   color: #cecaca;
+}
+h2 {
+  margin-top: 10px;
 }
 .credits-col {
   width: 15%;
