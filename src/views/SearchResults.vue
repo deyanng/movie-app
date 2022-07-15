@@ -72,7 +72,7 @@ export default {
   },
   watch: {
     query(newVal) {
-      this.searching(newVal);
+      this.searching(newVal, this.currPage);
     },
   },
 
@@ -128,7 +128,7 @@ a {
   text-decoration: none;
 }
 .result-item img {
-  width: 350px;
+  width: 90%;
   border-radius: 10px;
 }
 a.disabled {
