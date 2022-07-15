@@ -12,7 +12,7 @@
   </div>
 
   <transition-group class="carousel" tag="div" name="carousel">
-    <div class="carousel-item" v-for="object in data" :key="object.id">
+    <div class="carousel-item" v-for="object in getData" :key="object.id">
       <!-- router-link -->
       <router-link
         :to="{
@@ -44,7 +44,6 @@ export default {
   data() {
     return {
       imgUrl: "https://image.tmdb.org/t/p/w500",
-      data: [],
       startPage: 1,
       currPage: 1,
     };
@@ -81,8 +80,6 @@ export default {
     async loadData(value = this.currPage) {
       try {
         await this.$store.dispatch(this.setAction, { currPage: value });
-        this.data = this.getData;
-        // console.log(this.data);
       } catch (error) {
         this.error =
           error.message || "There is a problem with the fetch request!";

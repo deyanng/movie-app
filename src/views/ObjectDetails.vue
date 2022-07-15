@@ -77,6 +77,18 @@
         </button>
         <button
           class="nav-link"
+          id="nav-images-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#nav-images"
+          type="button"
+          role="tab"
+          aria-controls="nav-images"
+          aria-selected="false"
+        >
+          Images
+        </button>
+        <button
+          class="nav-link"
           id="nav-similar-tab"
           data-bs-toggle="tab"
           data-bs-target="#nav-similar"
@@ -122,11 +134,11 @@
         role="tabpanel"
         aria-labelledby="nav-videos-tab"
       >
-        <div v-if="videos && videos.length > 0" class="row" id="videos">
+        <div v-if="videos && videos.length > 0" class="row videos">
           <h2>Videos</h2>
           <div
             class="col video-col"
-            v-for="video in videos.slice(0, 3)"
+            v-for="video in videos.slice(0, 12)"
             :key="video.id"
           >
             <iframe :src="videoUrl + video.key" allowfullscreen></iframe>
@@ -138,15 +150,37 @@
       </div>
       <div
         class="tab-pane fade"
+        id="nav-images"
+        role="tabpanel"
+        aria-labelledby="nav-images-tab"
+      >
+        <div
+          v-if="images.backdrops && images.backdrops.length > 0"
+          class="row images"
+        >
+          <h2>Images</h2>
+          <div
+            class="col images-col"
+            v-for="image in images.backdrops.slice(0, 12)"
+            :key="image.file_path"
+          >
+            <img :src="imgUrl + image.file_path" alt="Image poster" />
+          </div>
+        </div>
+        <h2 v-else>There is no Images available!</h2>
+        <hr class="solid" />
+      </div>
+      <div
+        class="tab-pane fade"
         id="nav-similar"
         role="tabpanel"
         aria-labelledby="nav-similar-tab"
       >
-        <div class="row" v-if="similars && similars.length > 0" id="similars">
+        <div class="row similars" v-if="similars && similars.length > 0">
           <h2>Similar Media</h2>
           <div
             class="col similars-col"
-            v-for="similar in similars.slice(0, 5)"
+            v-for="similar in similars.slice(0, 12)"
             :key="similar.id"
           >
             <img
@@ -231,6 +265,9 @@ export default {
     },
     similars() {
       return this.$store.getters["details/similars"];
+    },
+    images() {
+      return this.$store.getters["details/images"];
     },
   },
   methods: {
@@ -329,29 +366,61 @@ h2 {
   width: 15%;
   border-radius: 50%;
 }
-.video-col {
-  width: 33%;
-  max-width: 600px;
-  margin: 0 20px;
-  padding: 10px;
+.images {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+.images-col {
+  width: 25%;
+  margin: 10px;
   background-color: #1f2b3f;
+  padding: 5px;
+  border-radius: 20px;
+  flex-basis: 25%;
+}
+.images-col img {
+  width: 95%;
   border-radius: 10px;
 }
+.videos {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+.video-col {
+  width: 25%;
+  max-width: 600px;
+  margin: 10px;
+  padding: 5px;
+  background-color: #1f2b3f;
+  border-radius: 10px;
+  flex-basis: 25%;
+}
 .video-col iframe {
-  width: 500px;
+  width: 95%;
   height: 300px;
   border-radius: 10px;
 }
+.similars {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
 .similars-col {
-  width: 20%;
-  margin: 0 20px;
+  width: 25%;
+  margin: 10px;
   padding: 10px;
   background-color: #1f2b3f;
   border-radius: 10px;
+  flex-basis: 25%;
 }
 .similars-col img {
-  width: 90%;
-  border-radius: 20px;
+  width: 95%;
+  border-radius: 10px;
 }
 hr.solid {
   margin-top: 10px;

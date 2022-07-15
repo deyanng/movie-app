@@ -6,6 +6,7 @@ export default {
       objectCredits: null,
       objectReviews: null,
       objectVideos: null,
+      objectImages: null,
       objectSimilars: null,
     };
   },
@@ -107,6 +108,28 @@ export default {
         console.log(error);
       }
     },
+    async loadObjectImages(context, payload) {
+      try {
+        const response = await fetch(
+          `https://api.themoviedb.org/3/${payload.kind}/${payload.id}/images?api_key=7074bb722049de6c4c14dd7d06db2407`
+        );
+
+        const responseData = await response.json();
+        console.log(responseData);
+        if (!response.ok) {
+          const error = new Error(
+            responseData.message || 'An error occured during the fetch request!'
+          );
+          throw error;
+        }
+        context.commit('SET_DATA', {
+          key: 'objectImages',
+          data: responseData,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async loadObjectSimilars(context, payload) {
       try {
         const response = await fetch(
@@ -134,6 +157,7 @@ export default {
         dispatch('loadObjectCredits', payload),
         dispatch('loadObjectReviews', payload),
         dispatch('loadObjectVideos', payload),
+        dispatch('loadObjectImages', payload),
         dispatch('loadObjectSimilars', payload),
       ];
       return Promise.all(list);
@@ -154,6 +178,9 @@ export default {
     },
     similars(state) {
       return state.objectSimilars;
+    },
+    images(state) {
+      return state.objectImages;
     },
   },
 };

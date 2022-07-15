@@ -90,6 +90,7 @@ export default {
         name: "Search",
         params: { query: this.searchWord },
       });
+      this.searchWord = "";
     },
   },
   computed: {

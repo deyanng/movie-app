@@ -1,21 +1,25 @@
 <template>
   <!-- |First|Prev|1|2|...|12|13|Next|Last| -->
   <ul>
-    <li @click="goToFirstPage" :inactive="isFirstPage">
+    <li @click="goToPage(1)" :inactive="isFirstPage">
       <a>First Page</a>
     </li>
-    <li @click="goToPrevPage" :inactive="isFirstPage"><a>Prev</a></li>
+    <li @click="goToPage(this.currPage - 1)" :inactive="isFirstPage">
+      <a>Prev</a>
+    </li>
     <li
       v-for="item in allPages"
       :key="item.num"
       :active="item.isActive"
       :class="{ active: isSelected(item.num) }"
-      @click="goToPageNumber(item.num)"
+      @click="goToPage(item.num)"
     >
       <a>{{ item.num }}</a>
     </li>
-    <li @click="goToNextPage" :inactive="isLastPage"><a>Next</a></li>
-    <li @click="goToLastPage" :inactive="isLastPage">
+    <li @click="goToPage(this.currPage + 1)" :inactive="isLastPage">
+      <a>Next</a>
+    </li>
+    <li @click="goToPage(this.totalPages)" :inactive="isLastPage">
       <a>Last Page</a>
     </li>
   </ul>
@@ -74,20 +78,8 @@ export default {
     isSelected(pageNum) {
       return this.currPage === pageNum;
     },
-    goToFirstPage() {
-      this.$emit("goTo", 1);
-    },
-    goToPrevPage() {
-      this.$emit("goTo", this.currPage - 1);
-    },
-    goToPageNumber(pageNum) {
-      this.$emit("goTo", pageNum);
-    },
-    goToNextPage() {
-      this.$emit("goTo", this.currPage + 1);
-    },
-    goToLastPage() {
-      this.$emit("goTo", this.totalPages);
+    goToPage(value) {
+      this.$emit("goTo", value);
     },
   },
 };
